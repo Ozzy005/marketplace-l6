@@ -11,6 +11,8 @@
     <div class="container">
         <a href="{{route('admin.stores.create')}}" class="btn btn-lg btn-success">Criar Loja</a>
         <a href="{{route('admin.stores.index')}}" class="btn btn-lg btn-success">Listar Lojas</a>
+        <a href="{{route('admin.products.create')}}" class="btn btn-lg btn-success">Criar Produto</a>
+        <a href="{{route('admin.products.index')}}" class="btn btn-lg btn-success">Listar Produto</a>
 
         @include('flash::message')
         @yield('content')
