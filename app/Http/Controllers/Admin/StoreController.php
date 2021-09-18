@@ -4,9 +4,17 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Store;
 
 class StoreController extends Controller
 {
+    private $store;
+
+    public function __construct(Store $store)
+    {
+        $this->store = $store;
+    }
+
     public function index()
     {
         $stores = \App\Store::paginate(10);
@@ -23,9 +31,8 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-
-        $user = \App\User::find($data['user']);
-        $store = $user->store()->create($data);
+        $user = auth()->user();
+        $user->store()->create($data);
 
         flash('Loja criada com sucesso')->success();
         return redirect()->route('admin.stores.index');
@@ -33,9 +40,17 @@ class StoreController extends Controller
 
     public function edit($store)
     {
-        $store = \App\Store::find($store);
-        
-        return view('admin.stores.edit', compact('store'));
+        $store = $this->store->findOrFail($store);
+
+        if($store->user_id == auth()->user()->id)
+        {
+            return view('admin.stores.edit', compact('store'));
+        }
+        else
+        {
+            flash('Essa loja não pertence a você!')->error();
+            return redirect()->route('admin.stores.index');
+        }
     }
 
     public function update(Request $request, $store)
@@ -51,10 +66,18 @@ class StoreController extends Controller
 
     public function destroy($store)
     {
-        $store = \App\Store::find($store);
-        $store->delete();
+        $store = $this->store->findOrFail($store);
 
-        flash('Loja removida com sucesso')->success();
-        return redirect()->route('admin.stores.index');
+        if($store->user_id == auth()->user()->id)
+        {
+            $store->delete();
+            flash('Loja removida com sucesso')->success();
+            return redirect()->route('admin.stores.index');
+        }
+        else
+        {
+            flash('Essa loja não pertence a você!')->error();
+            return redirect()->route('admin.stores.index');
+        }
     }
 }

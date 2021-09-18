@@ -34,7 +34,7 @@
     </div>
 
     <div>
-        <button type="submit" class="btn btn-lg btn-success">Confirmar</button>
+        <button type="submit" class="btn btn-sm btn-dark" style="margin-bottom: 40px;">Confirmar</button>
     </div>
 </form>
 @endsection

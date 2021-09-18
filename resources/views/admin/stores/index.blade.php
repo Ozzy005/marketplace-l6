@@ -4,8 +4,9 @@
     <table class='table table-striped'>
         <thead>
             <tr>
-                <th>#</th>
-                <th>Loja</th>
+                <th>ID</th>
+                <th>Usuário</th>
+                <th>Nome Loja</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -13,6 +14,7 @@
             @foreach($stores as $store)
                 <tr>
                     <td>{{$store->id}}</td>
+                    <td>{{$store->user_id}}</td>
                     <td>{{$store->name}}</td>
                     <td>
                         <div class="btn-group">

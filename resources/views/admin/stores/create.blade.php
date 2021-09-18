@@ -32,17 +32,8 @@
             <input type="text" name="slug" class='form-control'>
         </div>
 
-        <div class="form-group">
-            <label>Usuário</label>
-            <select name="user">
-                @foreach($users as $user)
-                    <option value="{{$user->id}}">{{$user->name}}</option>
-                @endforeach
-            </select>
-        </div>
-
         <div>
-            <button type="submit" class="btn btn-lg btn-success">Confirmar</button>
+            <button type="submit" class="btn btn-sm btn-dark" style="margin-bottom: 40px;">Confirmar</button>
         </div>
     </form>
 @endsection

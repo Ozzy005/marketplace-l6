@@ -4,7 +4,8 @@
     <table class='table table-striped'>
         <thead>
             <tr>
-                <th>#</th>
+                <th>ID</th>
+                <th>Loja</th>
                 <th>Nome</th>
                 <th>Preço</th>
                 <th>Loja</th>
@@ -15,6 +16,7 @@
             @foreach($products as $p)
                 <tr>
                     <td>{{$p->id}}</td>
+                    <td>{{$p->store_id}}</td>
                     <td>{{$p->name}}</td>
                     <td>R$ {{number_format($p->price, 2, ',', '.')}}</td>
                     <td>{{$p->store->name}}</td>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Criar loja</h1>
+    <h1>Editar loja</h1>
 
     <form action="{{route('admin.stores.update', ['store' => $store->id])}}" method="post">
 
@@ -34,7 +34,7 @@
         </div>
 
         <div>
-            <button type="submit" class="btn btn-lg btn-success">Atualizar Loja</button>
+            <button type="submit" class="btn btn-sm btn-dark" style="margin-bottom: 40px;">Atualizar Loja</button>
         </div>
     </form>
 @endsection
