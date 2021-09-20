@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Store;
+use App\Http\Requests\StoreRequest;
 
 class StoreController extends Controller
 {
@@ -12,27 +12,26 @@ class StoreController extends Controller
 
     public function __construct(Store $store)
     {
+        $this->middleware('user.has.store')->only(['create','store']);
         $this->store = $store;
     }
 
     public function index()
     {
-        $stores = \App\Store::paginate(10);
+        $store = auth()->user()->store;
 
-        return view('admin.stores.index', compact('stores'));
+        return view('admin.stores.index', compact('store'));
     }
 
     public function create()
     {
-        $users = \App\User::all(['id','name']);
-        return view('admin.stores.create',compact('users'));
+        return view('admin.stores.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $data = $request->all();
-        $user = auth()->user();
-        $user->store()->create($data);
+        auth()->user()->store()->create($data);
 
         flash('Loja criada com sucesso')->success();
         return redirect()->route('admin.stores.index');
@@ -42,23 +41,18 @@ class StoreController extends Controller
     {
         $store = $this->store->findOrFail($store);
 
-        if($store->user_id == auth()->user()->id)
+        if($store->user_id !== auth()->user()->id)
         {
-            return view('admin.stores.edit', compact('store'));
-        }
-        else
-        {
-            flash('Essa loja não pertence a você!')->error();
+            flash('Essa loja não pertence a você!')->warning();
             return redirect()->route('admin.stores.index');
         }
+        
+        return view('admin.stores.edit', compact('store'));
     }
 
-    public function update(Request $request, $store)
+    public function update(StoreRequest $request, $store)
     {
-        $data = $request->all();
-
-        $store = \App\Store::find($store);
-        $store->update($data);
+        $this->store::find($store)->update($request->all());
 
         flash('Loja Atualizada com sucesso')->success();
         return redirect()->route('admin.stores.index');
@@ -68,16 +62,15 @@ class StoreController extends Controller
     {
         $store = $this->store->findOrFail($store);
 
-        if($store->user_id == auth()->user()->id)
+        if($store->user_id !== auth()->user()->id)
         {
-            $store->delete();
-            flash('Loja removida com sucesso')->success();
+            flash('Essa loja não pertence a você!')->warning();
             return redirect()->route('admin.stores.index');
         }
-        else
-        {
-            flash('Essa loja não pertence a você!')->error();
-            return redirect()->route('admin.stores.index');
-        }
+        
+        $store->delete();
+
+        flash('Loja removida com sucesso')->success();
+        return redirect()->route('admin.stores.index');
     }
 }

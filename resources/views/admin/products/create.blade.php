@@ -9,36 +9,47 @@
 
         <div class="form-group">
             <label>Nome Produto</label>
-            <input type="text" name="name" class='form-control'>
+            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{old('name')}}">
+
+            @error('name')
+                <div class="invalid-feedback">{{$message}}</div>
+            @enderror
         </div>
 
         <div class="form-group">
             <label>Descrição</label>
-            <input type="text" name="description" class='form-control'>
+            <input type="text" name="description" class="form-control @error('description') is-invalid @enderror" value="{{old('description')}}">
+
+            @error('description')
+                <div class="invalid-feedback">{{$message}}</div>
+            @enderror
         </div>
 
         <div class="form-group">
             <label>Conteúdo</label>
-            <textarea name="body" class="form-control" cols="30" rows="10"></textarea>
+            <textarea name="body" class="form-control @error('body') is-invalid @enderror" value="{{old('body')}}" cols="30" rows="10"></textarea>
+
+            @error('body')
+                <div class="invalid-feedback">{{$message}}</div>
+            @enderror
         </div>
 
         <div class="form-group">
             <label>Preço</label>
-            <input type="text" name="price" class='form-control'>
+            <input type="text" name="price" class="form-control @error('price') is-invalid @enderror" value="{{old('price')}}">
+
+            @error('price')
+                <div class="invalid-feedback">{{$message}}</div>
+            @enderror
         </div>
 
         <div class="form-group">
             <label>Slug</label>
-            <input type="text" name="slug" class='form-control'>
-        </div>
+            <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror" value="{{old('slug')}}">
 
-        <div class="form-group">
-            <label>Lojas</label>
-            <select name="store">
-                @foreach($stores as $store)
-                    <option value="{{$store->id}}">{{$store->name}}</option>
-                @endforeach
-            </select>
+            @error('slug')
+                <div class="invalid-feedback">{{$message}}</div>
+            @enderror
         </div>
 
         <div>
