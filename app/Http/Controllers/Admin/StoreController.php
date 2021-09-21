@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Store;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRequest;
 
 class StoreController extends Controller
@@ -30,8 +30,7 @@ class StoreController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $data = $request->all();
-        auth()->user()->store()->create($data);
+        auth()->user()->store()->create($request->all());
 
         flash('Loja criada com sucesso')->success();
         return redirect()->route('admin.stores.index');

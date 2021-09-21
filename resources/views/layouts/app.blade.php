@@ -9,7 +9,6 @@
 </head>
 <body>
     <div class="container">
-
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand" href="{{route('home')}}">Marketplace L6</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +25,9 @@
                     <li class="nav-item @if(request()->is('admin/products*')) active @endif">
                         <a class="nav-link" href="{{route('admin.products.index')}}">Produtos</a>
                     </li>
+                    <li class="nav-item @if(request()->is('admin/categories*')) active @endif">
+                        <a class="nav-link" href="{{route('admin.categories.index')}}">Categorias</a>
+                    </li>
 
                     @if(request()->is('admin/stores'))
                         @if(!$store)
@@ -38,6 +40,12 @@
                     @if(request()->is('admin/products'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('admin.products.create')}}">Criar Produto</a>
+                        </li>
+                    @endif
+
+                    @if(request()->is('admin/categories'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('admin.categories.create')}}">Criar Categoria</a>
                         </li>
                     @endif
                     

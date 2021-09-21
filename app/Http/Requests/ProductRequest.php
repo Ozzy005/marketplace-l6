@@ -36,7 +36,7 @@ class ProductRequest extends FormRequest
     {
         return [
             'required' => 'Este campo :attribute é obrigatório',
-            'min' => 'Campo deve ter no mínimo :min caracteres',
+            'min' => 'Este campo deve ter no mínimo :min caracteres',
         ];
     }
 }

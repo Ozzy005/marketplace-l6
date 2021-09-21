@@ -6,21 +6,21 @@
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
-                <th>Preço</th>
+                <th>Descrição</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($products as $p)
+            @foreach($categories as $category)
                 <tr>
-                    <td>{{$p->id}}</td>
-                    <td>{{$p->name}}</td>
-                    <td>R$ {{number_format($p->price, 2, ',', '.')}}</td>
+                    <td>{{$category->id}}</td>
+                    <td>{{$category->name}}</td>
+                    <td>{{$category->description}}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="{{route('admin.products.edit', ['product' => $p->id])}}" class="btn btn-sm btn-primary">Editar</a>
+                            <a href="{{route('admin.categories.edit', ['category' => $category->id])}}" class="btn btn-sm btn-primary">Editar</a>
 
-                            <form action="{{route('admin.products.destroy', ['product' => $p->id])}}" method="POST">
+                            <form action="{{route('admin.categories.destroy', ['category' => $category->id])}}" method="POST">
                                 @csrf
                                 @method("DELETE")
 
@@ -33,6 +33,6 @@
         </tbody>
     </table>
 
-    {{$products->links()}}
+    {{$categories->links()}}
 @endsection
 

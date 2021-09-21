@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Product;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 
 class ProductController extends Controller
@@ -17,25 +17,25 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = $this->product->paginate(10);
+        $store = auth()->user()->store;
+        $products = $store->products()->paginate(10);
         
         return view('admin.products.index', compact('products'));
     }
 
     public function create()
     {
-        $user = auth()->user();
-        $stores = $user->store()->get(['id','name']);
+        $categories = \App\Category::all(['id', 'name']);
 
-        return view('admin.products.create', compact('stores'));
+        return view('admin.products.create', compact('categories'));
     }
 
     public function store(ProductRequest $request)
     {
         $data = $request->all();
-
         $store = auth()->user()->store;
-        $store->products()->create($data);
+        $product = $store->products()->create($data);
+        $product->categories()->sync($data['categories']);
 
         flash('Produto criado com sucesso!')->success();
         return redirect()->route('admin.products.index');
@@ -48,18 +48,17 @@ class ProductController extends Controller
 
     public function edit($product)
     {
+        $categories = \App\Category::all(['id', 'name']);
         $product = $this->product->findOrFail($product);
         $store = \App\Store::find($product->store_id);
 
-        if($store->user_id == auth()->user()->id)
-        {
-            return view('admin.products.edit', compact('product'));
-        }
-        else
+        if($store->user_id !== auth()->user()->id)
         {
             flash('Esse produto não pertence a sua loja!')->error();
             return redirect()->route('admin.products.index');
         }
+
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     public function update(ProductRequest $request, $product)
@@ -68,6 +67,7 @@ class ProductController extends Controller
         
         $product = $this->product->find($product);
         $product->update($data);
+        $product->categories()->sync($data['categories']);
 
         flash('Produto atualizado com sucesso!')->success();
         return redirect()->route('admin.products.index');
@@ -78,16 +78,15 @@ class ProductController extends Controller
         $product = $this->product->findOrFail($product);
         $store = \App\Store::find($product->store_id);
 
-        if($store->user_id == auth()->user()->id)
-        {
-            $product->delete();
-            flash('Produto removido com sucesso')->success();
-            return redirect()->route('admin.products.index');
-        }
-        else
+        if($store->user_id !== auth()->user()->id)
         {
             flash('Esse produto não pertence a sua loja!')->error();
             return redirect()->route('admin.products.index');
         }
+
+        $product->delete();
+        
+        flash('Produto removido com sucesso')->success();
+        return redirect()->route('admin.products.index');
     }
 }

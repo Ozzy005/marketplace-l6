@@ -1,13 +1,13 @@
 @extends('layouts.app')
-
 @section('content')
-    <h1>Editar loja</h1>
+
+    <h1">Editar loja</h1>
 
     <form action="{{route('admin.stores.update', ['store' => $store->id])}}" method="post">
 
         @csrf
         @method("PUT")
-
+        
         <div class="form-group">
             <label>Loja</label>
             <input type="text" name="name" class='form-control' value="{{$store->name}}">

@@ -5,9 +5,8 @@
 
         <thead>
             <tr>
-                <th>ID Loja</th>
-                <th>ID Usuário</th>
-                <th>Nome Loja</th>
+                <th>ID</th>
+                <th>Nome</th>
                 <th>Quantidade</th>
                 <th>Ações</th>
             </tr>
@@ -17,7 +16,6 @@
             <tbody>
                 <tr>
                     <td>{{$store->id}}</td>
-                    <td>{{$store->user_id}}</td>
                     <td>{{$store->name}}</td>
                     <td>{{$store->products->count()}}</td>
                     <td>
@@ -26,7 +24,6 @@
                             <form action="{{route('admin.stores.destroy', ['store' => $store->id])}}" method="POST">
                                 @csrf
                                 @method("DELETE")
-
                                 <button type="submit" class="btn btn-sm btn-danger">DELETE</button>
                             </form>
                         </div>
@@ -34,7 +31,7 @@
                 </tr>
             </tbody>
         @endif
-
+        
     </table>
 
 @endsection
