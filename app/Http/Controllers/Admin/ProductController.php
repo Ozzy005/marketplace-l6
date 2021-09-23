@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Product;
+use App\ProductPhotos;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -36,6 +39,11 @@ class ProductController extends Controller
         $store = auth()->user()->store;
         $product = $store->products()->create($data);
         $product->categories()->sync($data['categories']);
+
+        if($request->hasFile('photos')){
+            $photos = $this->imageUpload($request);
+            $product->photos()->createMany($photos);
+        }
 
         flash('Produto criado com sucesso!')->success();
         return redirect()->route('admin.products.index');
@@ -69,6 +77,11 @@ class ProductController extends Controller
         $product->update($data);
         $product->categories()->sync($data['categories']);
 
+        if($request->hasFile('photos')){
+            $photos = $this->imageUpload($request);
+            $product->photos()->createMany($photos);
+        }
+
         flash('Produto atualizado com sucesso!')->success();
         return redirect()->route('admin.products.index');
     }
@@ -84,9 +97,39 @@ class ProductController extends Controller
             return redirect()->route('admin.products.index');
         }
 
+        $product->categories()->detach();
         $product->delete();
         
         flash('Produto removido com sucesso')->success();
         return redirect()->route('admin.products.index');
+    }
+
+    private function imageUpload(ProductRequest $request)
+    {
+        $photos = $request->file('photos');
+
+        $uploadedPhotos = [];
+
+        foreach($photos as $photo){
+            $uploadedPhotos[] = ['photo' => $photo->store('products', 'public')];
+        }
+
+        return $uploadedPhotos;
+    }
+
+    public function removePhoto(Request $request)
+    {
+        $photoId = $request->get('photoId');
+        $photo = ProductPhotos::find($photoId);
+
+        if(Storage::disk('public')->exists($photo->photo))
+        {
+            Storage::disk('public')->delete($photo->photo);
+        }
+
+        $photo->delete();
+
+        flash('Foto removida com sucesso')->success();
+        return redirect()->route("admin.products.edit",['product' => $photo->product_id]);
     }
 }

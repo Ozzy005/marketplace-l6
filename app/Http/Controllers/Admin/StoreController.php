@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Store;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class StoreController extends Controller
 {
@@ -30,7 +32,14 @@ class StoreController extends Controller
 
     public function store(StoreRequest $request)
     {
-        auth()->user()->store()->create($request->all());
+        $data = $request->all();
+
+        if($request->hasFile('logo'))
+        {
+            $data['logo'] = $request->file('logo')->store('stores', 'public');
+        }
+
+        auth()->user()->store()->create($data);
 
         flash('Loja criada com sucesso')->success();
         return redirect()->route('admin.stores.index');
@@ -51,7 +60,20 @@ class StoreController extends Controller
 
     public function update(StoreRequest $request, $store)
     {
-        $this->store::find($store)->update($request->all());
+        $data = $request->all();
+        $store = $this->store::find($store);
+
+        if($request->hasFile('logo'))
+        {
+            if(Storage::disk('public')->exists($store->logo))
+            {
+                Storage::disk('public')->delete($store->logo);
+            }
+
+            $data['logo'] = $request->file('logo')->store('stores', 'public');
+        }
+
+        $store->update($data);
 
         flash('Loja Atualizada com sucesso')->success();
         return redirect()->route('admin.stores.index');

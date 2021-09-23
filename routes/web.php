@@ -21,6 +21,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::resource('stores','StoreController');
         Route::resource('products', 'ProductController');
         Route::resource('categories','CategoryController');
+        Route::post('products/photo/remove', 'ProductController@removePhoto')->name('products.photo.remove');
+        Route::post('stores/image/remove', 'StoreController@removeImage')->name('stores.image.remove');
     });
 });
 
