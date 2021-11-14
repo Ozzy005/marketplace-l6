@@ -39,7 +39,7 @@ class StoreController extends Controller
             $data['logo'] = $request->file('logo')->store('stores', 'public');
         }
 
-        auth()->user()->store()->create($data);
+        $store = auth()->user()->store()->create($data);
 
         flash('Loja criada com sucesso')->success();
         return redirect()->route('admin.stores.index');

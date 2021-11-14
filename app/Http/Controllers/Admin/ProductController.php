@@ -20,8 +20,11 @@ class ProductController extends Controller
 
     public function index()
     {
+        $products = null;
         $store = auth()->user()->store;
-        $products = $store->products()->paginate(10);
+
+        if(!empty($store))
+            $products = $store->products()->paginate(10);
         
         return view('admin.products.index', compact('products'));
     }
@@ -36,9 +39,12 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $data = $request->all();
+        $categories = $request->get('categories', null);
+
         $store = auth()->user()->store;
         $product = $store->products()->create($data);
-        $product->categories()->sync($data['categories']);
+
+        $product->categories()->sync($categories);
 
         if($request->hasFile('photos')){
             $photos = $this->imageUpload($request);
@@ -60,8 +66,7 @@ class ProductController extends Controller
         $product = $this->product->findOrFail($product);
         $store = \App\Store::find($product->store_id);
 
-        if($store->user_id !== auth()->user()->id)
-        {
+        if($store->user_id !== auth()->user()->id){
             flash('Esse produto não pertence a sua loja!')->error();
             return redirect()->route('admin.products.index');
         }
@@ -75,7 +80,10 @@ class ProductController extends Controller
         
         $product = $this->product->find($product);
         $product->update($data);
-        $product->categories()->sync($data['categories']);
+
+        $categories = $request->get('categories', null);
+        if(!empty($categories))
+            $product->categories()->sync($categories);
 
         if($request->hasFile('photos')){
             $photos = $this->imageUpload($request);

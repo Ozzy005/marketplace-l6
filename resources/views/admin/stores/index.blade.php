@@ -12,7 +12,7 @@
             </tr>
         </thead>
 
-        @if(auth()->user()->store()->count() === 1)
+        @if(!empty($store))
             <tbody>
                 <tr>
                     <td>{{$store->id}}</td>

@@ -18,11 +18,6 @@
         <input type="text" name="description" class='form-control' value="{{$category->description}}">
     </div>
 
-    <div class="form-group">
-        <label>Slug</label>
-        <input type="text" name="slug" class='form-control' value="{{$category->slug}}">
-    </div>
-
     <div>
         <button type="submit" class="btn btn-sm btn-dark" style="margin-bottom: 40px;">Confirmar</button>
     </div>
